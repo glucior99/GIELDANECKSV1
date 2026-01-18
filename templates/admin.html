@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Admin</title>
+<style>
+.tabs a { margin-right: 15px; font-weight: bold; text-decoration: none; }
+table, th, td { border:1px solid #333; border-collapse: collapse; padding:5px; }
+</style>
+</head>
+<body>
+
+<h1>Panel admina</h1>
+<a href="/logout" style="position:fixed;top:10px;right:10px;">Wyloguj</a>
+
+<h2>Dodaj giełdę</h2>
+<form method="post">
+<input name="exchange_name" required>
+<button>Dodaj</button>
+</form>
+
+<hr>
+
+<h2>Giełdy</h2>
+<div class="tabs">
+{% for ex_id, ex_name, _ in exchange_data %}
+<a href="#ex{{ ex_id }}">{{ ex_name }}</a>
+{% endfor %}
+</div>
+
+{% for ex_id, ex_name, mats in exchange_data %}
+<h3 id="ex{{ ex_id }}">{{ ex_name }}</h3>
+
+<form method="post">
+<input type="hidden" name="exchange_id" value="{{ ex_id }}">
+<input name="material_name" required>
+<button>Dodaj materiał</button>
+</form>
+
+<ul>
+{% for m in mats %}
+<li>{{ m[1] }}</li>
+{% endfor %}
+</ul>
+
+<h4>Statystyki</h4>
+<table>
+<tr>
+<th>Materiał</th>
+<th>Użytkownik</th>
+<th>Cena</th>
+<th>Średnia</th>
+<th>Odchylenie</th>
+<th>MAX</th>
+<th>MIN</th>
+<th>Spadek %</th>
+</tr>
+
+{% for s in stats_by_exchange[ex_id] %}
+<tr>
+<td>{{ s[0] }}</td>
+<td>{{ s[1] }}</td>
+<td>{{ s[2] }}</td>
+<td>{{ s[3] }}</td>
+<td>{{ s[4] }}</td>
+<td>{{ s[5] }}</td>
+<td>{{ s[6] }}</td>
+<td>{{ s[7] }}%</td>
+</tr>
+{% endfor %}
+</table>
+
+<hr>
+{% endfor %}
+
+</body>
+</html>

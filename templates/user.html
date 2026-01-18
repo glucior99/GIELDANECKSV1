@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>User</title>
+<style>
+table, th, td { border:1px solid #333; border-collapse: collapse; padding:5px; }
+</style>
+</head>
+<body>
+
+<h1>Witaj {{ session['user'] }}</h1>
+<a href="/logout" style="position:fixed;top:10px;right:10px;">Wyloguj</a>
+
+{% for _, ex_name, mats in exchange_data %}
+<h2>{{ ex_name }}</h2>
+<table>
+<tr>
+<th>Materiał</th>
+<th>Twoja cena</th>
+<th>Ranking</th>
+<th>Zmień cenę</th>
+</tr>
+
+{% for m_id, m_name, price, rank in mats %}
+<tr>
+<td>{{ m_name }}</td>
+<td>{{ price if price else "-" }}</td>
+<td>
+{% if rank == "REMIS" %}
+<span style="color:red;font-weight:bold;">REMIS</span>
+{% else %}
+{{ rank }}
+{% endif %}
+</td>
+<td>
+<form method="post" action="/add_price/{{ m_id }}">
+<input type="number" step="0.01" name="price" required>
+<button>Zapisz</button>
+</form>
+</td>
+</tr>
+{% endfor %}
+</table>
+{% endfor %}
+
+</body>
+</html>
